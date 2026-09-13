@@ -3,20 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة التنظيف بالواقع المختلط - Passthrough</title>
+    <title>منظف الواقع المختلط - لعبة حقيقية</title>
     <style>
-        body { margin: 0; background: #000; color: #fff; font-family: Tahoma, sans-serif; overflow: hidden; }
-        #hud {
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+
+        body {
+            margin: 0;
+            background: transparent;
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* لوحة التحكم السينمائية (HUD) */
+        #gameHud {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(10, 15, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.2);
             z-index: 10;
+            width: 260px;
         }
-        .hud-item { margin-bottom: 8px; font-size: 16px; }
+
+        .hud-header {
+            font-size: 14px;
+            color: #10b981;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hud-value {
+            font-size: 24px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        /* زر التشغيل الضخم للواقع المختلط */
         #arButton {
             position: absolute;
             bottom: 40px;
@@ -24,49 +56,93 @@
             transform: translateX(-50%);
             background: linear-gradient(135deg, #059669, #10b981);
             color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 12px;
+            border: 2px solid #34d399;
+            padding: 18px 36px;
+            font-size: 20px;
+            font-weight: 900;
+            border-radius: 50px;
             cursor: pointer;
             z-index: 10;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.6), inset 0 2px 5px rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
         }
+
+        #arButton:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.8);
+        }
+
+        /* نافذة المتجر السينمائية */
         #shopModal {
             display: none;
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            background: #111827;
+            background: rgba(11, 19, 38, 0.95);
+            backdrop-filter: blur(20px);
             border: 2px solid #10b981;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 30px;
+            border-radius: 24px;
             z-index: 100;
-            width: 350px;
+            width: 400px;
             text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(16, 185, 129, 0.4);
         }
-        .btn { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+
+        #shopModal h2 {
+            color: #34d399;
+            margin-top: 0;
+            font-weight: 900;
+        }
+
+        .game-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15px;
+            margin-top: 10px;
+            width: 100%;
+            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .game-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .close-btn { background: linear-gradient(135deg, #dc2626, #b91c1c); box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4); }
     </style>
-    <!-- مكتبة Three.js -->
+    <!-- Three.js للرسومات -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <div id="hud">
-        <div class="hud-item">المرحلة: <span id="currentStage">1</span> / 100</div>
-        <div class="hud-item">الرصيد: <span id="playerCoins">0.00</span> 🪙</div>
-        <div class="hud-item">العائد لكل نقطة: <span id="coinRate">0.50</span></div>
-        <button class="btn" onclick="toggleShop()">🛒 المتجر</button>
+    <!-- واجهة اللعبة السينمائية -->
+    <div id="gameHud">
+        <div class="hud-header">المستوى الحالي</div>
+        <div class="hud-value" id="currentStage">المرحلة 1 / 100</div>
+        
+        <div class="hud-header">الرصيد المكتسب</div>
+        <div class="hud-value" id="playerCoins">0.00 🪙</div>
+        
+        <div class="hud-header">معدل الربح للنقطة</div>
+        <div class="hud-value" id="coinRate" style="font-size: 18px; color: #34d399;">+0.50 لكل أوساخ</div>
+
+        <button class="game-btn" onclick="toggleShop()">🛒 متجر التجهيزات</button>
     </div>
 
-    <button id="arButton" onclick="startARSession()">🥽 تفعيل وضع الـ AR (Passthrough)</button>
+    <button id="arButton" onclick="startARSession()">🚀 ابدأ تجربة الواقع المختلط</button>
 
+    <!-- متجر الألعاب -->
     <div id="shopModal">
-        <h2>متجر أدوات التنظيف</h2>
-        <p>الأدوات المشتراة تنتقل معك للمراحل المتقدمة تلقائياً!</p>
-        <button class="btn" onclick="buyTool('ممسحة سريعة', 10)">شراء ممسحة سريعة (10 🪙)</button><br>
-        <button class="btn" style="background:#ef4444;" onclick="toggleShop()">إغلاق</button>
+        <h2>متجر تطوير أدوات التنظيف</h2>
+        <p style="color: #94a3b8; font-size: 14px;">الأدوات التي تشتريها تنتقل معك وترافقك أوتوماتيكياً في كل المراحل القادمة!</p>
+        <button class="game-btn" onclick="buyTool('ممسحة الليزر السريعة', 10)">شراء ممسحة ليزر (10 🪙)</button>
+        <button class="game-btn" onclick="buyTool('بخاخ الأيونات العميق', 25)">شراء بخاخ أيونات (25 🪙)</button>
+        <button class="game-btn close-btn" onclick="toggleShop()">إغلاق المتجر</button>
     </div>
 
     <script>
@@ -78,11 +154,10 @@
         function updateStageSettings(newStage) {
             stage = newStage;
             currentCoinRate = stage * 0.50;
-            document.getElementById('currentStage').innerText = stage;
-            document.getElementById('coinRate').innerText = currentCoinRate.toFixed(2);
+            document.getElementById('currentStage').innerText = `المرحلة ${stage} / 100`;
+            document.getElementById('coinRate').innerText = `+${currentCoinRate.toFixed(2)} لكل أوساخ`;
         }
 
-        // بدء جلسة الواقع المختلط مع تفعيل الكاميرا الخلفية (Passthrough) وتتبع اليدين
         async function startARSession() {
             if (navigator.xr) {
                 try {
@@ -91,9 +166,8 @@
                     });
                     
                     document.getElementById('arButton').style.display = 'none';
-                    alert("تم تفعيل وضع الـ Passthrough بنجاح! بيتك الحقيقي ظاهر أمامك الآن.");
-
-                    // جلب خريطة البيت من السيرفر بالتزامن مع الدخول
+                    
+                    // ربط سحب الخريطة الفعلية من السيرفر بمجرد الدخول للعبة
                     fetchHouseMap();
 
                     xrSession.addEventListener('end', () => {
@@ -102,10 +176,10 @@
                     });
 
                 } catch (e) {
-                    alert("فشل تشغيل جلسة AR: " + e.message);
+                    alert("فشل تشغيل الواقع المختلط: " + e.message);
                 }
             } else {
-                alert("متصفحك لا يدعم WebXR. يرجى الفتح من متصفح نظارة الكويست.");
+                alert("يرجى فتح اللعبة من متصفح نظارة الكويست لتفعيل وضع الـ AR.");
             }
         }
 
@@ -117,11 +191,11 @@
         function buyTool(toolName, cost) {
             if (coins >= cost) {
                 coins -= cost;
-                document.getElementById('playerCoins').innerText = coins.toFixed(2);
-                alert(`تم شراء ${toolName}! سترافقك في المراحل القادمة.`);
+                document.getElementById('playerCoins').innerText = `${coins.toFixed(2)} 🪙`;
+                alert(`تم الاستحواذ على [${toolName}] بنجاح! تم حفظها في حقيبتك للمراحل القادمة.`);
                 toggleShop();
             } else {
-                alert("رصيد العملات غير كافي!");
+                alert("الرصيد غير كافي! نظف المزيد من الغرفة لتجميع العملات.");
             }
         }
 
@@ -129,9 +203,9 @@
             try {
                 const response = await fetch('https://game-4jxf.onrender.com/api/get-house');
                 const houseData = await response.json();
-                console.log("تم إسقاط الأوساخ فوق أثاث بيتك الحقيقي بنجاح:", houseData);
+                console.log("تم مزامنة أثاث بيتك الحقيقي بنجاح وجاهز لعرض الأوساخ فوقه:", houseData);
             } catch (e) {
-                console.log("بانتظار مزامنة خريطة البيت من موقع المسح.");
+                console.log("في انتظار مسح الخريطة من تطبيق Scan.");
             }
         }
 
