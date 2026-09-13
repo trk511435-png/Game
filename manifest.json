@@ -1,15 +1,18 @@
 {
   "name": "منظف الواقع المختلط",
   "short_name": "AR Cleaner",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#070913",
   "theme_color": "#10b981",
+  "description": "لعبة تنظيف ببيئة الواقع المختلط لنظارة الكويست",
+  "orientation": "any",
   "icons": [
     {
-      "src": "/icon.png",
+      "src": "https://img.icons8.com/fluency/512/broom.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
