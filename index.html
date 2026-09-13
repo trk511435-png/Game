@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منظف الواقع المختلط - القائمة الرئيسية</title>
+    
+    <!-- ربط ملف المينفيست مباشرة داخل الملف لتجاوز مشاكل PWABuilder -->
+    <link rel="manifest" href="data:application/manifest+json,{
+      %22name%22: %22منظف الواقع المختلط%22,
+      %22short_name%22: %22AR Cleaner%22,
+      %22start_url%22: %22index.html%22,
+      %22display%22: %22standalone%22,
+      %22background_color%22: %22%23070913%22,
+      %22theme_color%22: %22%2310b981%22,
+      %22icons%22: [{%22src%22: %22https://via.placeholder.com/512%22, %22sizes%22: %22512x512%22, %22type%22: %22image/png%22}]
+    }">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         body {
@@ -39,7 +51,6 @@
             margin-bottom: 12px; font-family: 'Tajawal', sans-serif;
         }
         .game-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6); }
-        .btn-secondary { background: #1f293d; border: 1px solid rgba(255,255,255,0.1); box-shadow: none; color: #e2e8f0; }
     </style>
 </head>
 <body>
@@ -61,7 +72,6 @@
         </div>
     </div>
     <script>
-        // تحميل بيانات اللاعب الحقيقية من السيرفر أو التخزين
         let playerStage = localStorage.getItem('game_stage') || 1;
         let playerCoins = parseFloat(localStorage.getItem('game_coins') || 0.0);
         
