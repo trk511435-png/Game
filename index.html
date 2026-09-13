@@ -3,130 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة التنظيف الواقعي - AR</title>
+    <title>منظف الواقع المختلط - القائمة الرئيسية</title>
     <style>
-        :root {
-            --bg: #070913;
-            --card-bg: rgba(17, 24, 39, 0.85);
-            --accent: #10b981;
-            --accent-glow: rgba(16, 185, 129, 0.4);
-            --text: #f3f4f6;
-            --muted: #9ca3af;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 50% 10%, #1e1b4b 0%, var(--bg) 70%);
-            color: var(--text);
             margin: 0;
+            background: #070913;
+            background-image: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #070913 70%);
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
+
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 440px;
             padding: 20px;
             box-sizing: border-box;
         }
+
         .panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(11, 19, 38, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(16, 185, 129, 0.4);
             border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7), 0 0 30px var(--accent-glow);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(16, 185, 129, 0.2);
             text-align: center;
         }
+
         h1 {
             font-size: 26px;
+            font-weight: 900;
             margin-bottom: 5px;
             background: linear-gradient(45deg, #34d399, #60a5fa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
         }
+
+        p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
         .stats-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px;
-            border-radius: 12px;
-            margin: 20px 0;
-            font-size: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 14px;
+            border-radius: 14px;
+            margin-bottom: 25px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .stats-bar span { color: #34d399; font-weight: bold; }
+
+        .stats-bar div { font-size: 14px; color: #94a3b8; }
+        .stats-bar span { color: #34d399; font-weight: 900; font-size: 16px; display: block; margin-top: 2px; }
+
         .section-title {
-            font-size: 16px;
-            color: var(--muted);
-            margin: 15px 0 8px;
+            font-size: 14px;
+            color: #34d399;
+            margin-bottom: 8px;
             text-align: right;
+            font-weight: 700;
         }
-        select, .btn {
+
+        select {
             width: 100%;
             padding: 14px;
             border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            box-sizing: border-box;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        select {
-            background: #1f293d;
+            background: #111827;
             color: white;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 15px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-size: 15px;
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 20px;
+            outline: none;
             text-align: right;
+            cursor: pointer;
         }
-        .btn-primary {
+
+        .game-btn {
             background: linear-gradient(135deg, #059669, #10b981);
             color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-            margin-top: 10px;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 900;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+            margin-bottom: 12px;
+            font-family: 'Tajawal', sans-serif;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.6);
+        }
+
         .btn-secondary {
-            background: #374151;
-            color: white;
-            margin-top: 10px;
+            background: #1f293d;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: none;
+            color: #e2e8f0;
         }
-        .btn-secondary:hover { background: #4b5563; }
+
+        .btn-secondary:hover {
+            background: #374151;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="panel">
-            <h1>منظف الواقع المختلط (AR)</h1>
-            <p style="color: var(--muted); font-size: 13px;">نظف بيتك الحقيقي بيديك بدون أجهزة تحكم!</p>
+            <h1>منظف الواقع المختلط</h1>
+            <p>نظف بيتك الحقيقي عبر تتبع اليدين ووضع الـ Passthrough</p>
 
-            <!-- معلومات اللاعب والمراحل -->
+            <!-- معلومات عامة مسترجعة من التخزين المحلي -->
             <div class="stats-bar">
-                <div>المرحلة: <span id="stageNum">1</span> / 100</div>
-                <div>الرصيد: <span id="coinsVal">0.00</span> 🪙</div>
+                <div>المرحلة الحالية: <span id="stageNum">1</span></div>
+                <div>الرصيد المتاح: <span id="coinsVal">0.00</span> 🪙</div>
             </div>
 
             <!-- اختيار الطابق -->
-            <div class="section-title">اختر الطابق المستهدف:</div>
+            <div class="section-title">اختر الطابق المستهدف بالمنزل:</div>
             <select id="floorSelect">
                 <option value="ground">الطابق الأرضي (Ground Floor)</option>
                 <option value="first">الطابق الأول (First Floor)</option>
                 <option value="second">الطابق الثاني (Second Floor)</option>
             </select>
 
-            <!-- طريقة الدخول -->
-            <button class="btn btn-primary" onclick="startARGame(false)">🏠 اللعب على الخريطة المسجلة (AR)</button>
-            <button class="btn btn-secondary" onclick="startARGame(true)">⚡ فحص المكان الحالي سريعاً ثم البدء</button>
-            
-            <button class="btn" style="background: #2563eb; color: white; margin-top: 15px;" onclick="openShop()">🛒 متجر الأدوات التطويرية</button>
+            <!-- أزرار التشغيل -->
+            <button class="game-btn" onclick="launchGame(false)">🚀 الدخول بالخريطة المسجلة (AR)</button>
+            <button class="game-btn btn-secondary" onclick="launchGame(true)">⚡ فحص المكان الحالي سريعاً</button>
+            <button class="game-btn" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);" onclick="openShop()">🛒 متجر التجهيزات</button>
         </div>
     </div>
 
     <script>
-        // حفظ بيانات اللعبة البسيطة محلياً للتجربة
+        // قراءة البيانات المخزنة مسبقاً إن وجدت
         let playerStats = {
             stage: localStorage.getItem('game_stage') || 1,
             coins: parseFloat(localStorage.getItem('game_coins') || 0.0)
@@ -135,20 +161,20 @@
         document.getElementById('stageNum').innerText = playerStats.stage;
         document.getElementById('coinsVal').innerText = playerStats.coins.toFixed(2);
 
-        function startARGame(isRescan) {
-            const selectedFloor = document.getElementById('floorSelect').value;
-            
+        function launchGame(isRescan) {
+            const floor = document.getElementById('floorSelect').value;
             if (isRescan) {
-                alert(`سيتم فتح نظام المسح السريع للطابق (${selectedFloor}) لتحديث إحداثيات الأثاث الحالية.`);
-                // هنا يتم توجيهه لرابط الماسح مع تحديد الطابق
+                alert(`جاري تهيئة وضع المسح السريع للطابق (${floor})...`);
+                // توجيه لصفحة المسح أو تفعيل الفحص
             } else {
-                alert(`جاري تحميل خريطة (${selectedFloor}) المسجلة مسبقاً وتفعيل وضع الـ AR وحركة اليدين...`);
-                // هنا يبدأ مشهد الـ WebXR الحقيقي وتتبع اليدين Hand Tracking
+                alert(`جاري تحميل خريطة الطابق (${floor}) وتفعيل بيئة الـ AR...`);
+                // الانتقال لملف اللعبة أو تفعيل الجلسة
+                window.location.href = 'game.html';
             }
         }
 
         function openShop() {
-            alert("قريباً: متجر الأدوات (ممسحة سريعة، بخاخ عميق، روبوت مساعد) لتسهيل المراحل الصعبة!");
+            alert("سيتم نقلك لمتجر الأدوات والمعدات قريباً.");
         }
     </script>
 </body>
