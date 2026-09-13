@@ -3,18 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظف الواقع المختلط - القائمة الرئيسية</title>
+    <title>منظف الواقع المختلط</title>
     
-    <!-- ربط ملف المينفيست مباشرة داخل الملف لتجاوز مشاكل PWABuilder -->
-    <link rel="manifest" href="data:application/manifest+json,{
-      %22name%22: %22منظف الواقع المختلط%22,
-      %22short_name%22: %22AR Cleaner%22,
-      %22start_url%22: %22index.html%22,
-      %22display%22: %22standalone%22,
-      %22background_color%22: %22%23070913%22,
-      %22theme_color%22: %22%2310b981%22,
-      %22icons%22: [{%22src%22: %22https://via.placeholder.com/512%22, %22sizes%22: %22512x512%22, %22type%22: %22image/png%22}]
-    }">
+    <!-- ربط ملف المينفيست الخارجي بالشكل الصحيح الذي يقبله PWABuilder -->
+    <link rel="manifest" href="manifest.json">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
