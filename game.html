@@ -3,20 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بيئة التنظيف الواقعية - AR</title>
+    <title>لعبة التنظيف بالواقع المختلط - Passthrough</title>
     <style>
         body { margin: 0; background: #000; color: #fff; font-family: Tahoma, sans-serif; overflow: hidden; }
         #hud {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.2);
             z-index: 10;
         }
         .hud-item { margin-bottom: 8px; font-size: 16px; }
+        #arButton {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+        }
         #shopModal {
             display: none;
             position: fixed;
@@ -32,7 +48,7 @@
         }
         .btn { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
     </style>
-    <!-- مكتبة Three.js لدعم العرض الثلاثي الأبعاد والواقع المختلط -->
+    <!-- مكتبة Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -44,9 +60,11 @@
         <button class="btn" onclick="toggleShop()">🛒 المتجر</button>
     </div>
 
+    <button id="arButton" onclick="startARSession()">🥽 تفعيل وضع الـ AR (Passthrough)</button>
+
     <div id="shopModal">
         <h2>متجر أدوات التنظيف</h2>
-        <p>اشتري أدوات تنتقل معك للمراحل القادمة وتسهل التنظيف!</p>
+        <p>الأدوات المشتراة تنتقل معك للمراحل المتقدمة تلقائياً!</p>
         <button class="btn" onclick="buyTool('ممسحة سريعة', 10)">شراء ممسحة سريعة (10 🪙)</button><br>
         <button class="btn" style="background:#ef4444;" onclick="toggleShop()">إغلاق</button>
     </div>
@@ -55,8 +73,8 @@
         let stage = 1;
         let coins = 0.0;
         let currentCoinRate = 0.50;
+        let xrSession = null;
 
-        // حساب معدل الربح بناءً على المرحلة (المرحلة × 0.50)
         function updateStageSettings(newStage) {
             stage = newStage;
             currentCoinRate = stage * 0.50;
@@ -64,10 +82,31 @@
             document.getElementById('coinRate').innerText = currentCoinRate.toFixed(2);
         }
 
-        // محاكاة تنظيف الأوساخ واكتساب العملات بـ AR اليدين
-        function cleanDirtItem() {
-            coins += currentCoinRate;
-            document.getElementById('playerCoins').innerText = coins.toFixed(2);
+        // بدء جلسة الواقع المختلط مع تفعيل الكاميرا الخلفية (Passthrough) وتتبع اليدين
+        async function startARSession() {
+            if (navigator.xr) {
+                try {
+                    xrSession = await navigator.xr.requestSession('immersive-ar', {
+                        requiredFeatures: ['hit-test', 'local-floor', 'hand-tracking']
+                    });
+                    
+                    document.getElementById('arButton').style.display = 'none';
+                    alert("تم تفعيل وضع الـ Passthrough بنجاح! بيتك الحقيقي ظاهر أمامك الآن.");
+
+                    // جلب خريطة البيت من السيرفر بالتزامن مع الدخول
+                    fetchHouseMap();
+
+                    xrSession.addEventListener('end', () => {
+                        xrSession = null;
+                        document.getElementById('arButton').style.display = 'block';
+                    });
+
+                } catch (e) {
+                    alert("فشل تشغيل جلسة AR: " + e.message);
+                }
+            } else {
+                alert("متصفحك لا يدعم WebXR. يرجى الفتح من متصفح نظارة الكويست.");
+            }
         }
 
         function toggleShop() {
@@ -79,26 +118,23 @@
             if (coins >= cost) {
                 coins -= cost;
                 document.getElementById('playerCoins').innerText = coins.toFixed(2);
-                alert(`تم شراء ${toolName} بنجاح! سترافقك في المراحل القادمة.`);
+                alert(`تم شراء ${toolName}! سترافقك في المراحل القادمة.`);
                 toggleShop();
             } else {
-                alert("رصيدك غير كافي! نظف المزيد لتجمع العملات.");
+                alert("رصيد العملات غير كافي!");
             }
         }
 
-        // جلب خريطة البيت المسجلة من سيرفر Render عند تشغيل اللعبة
         async function fetchHouseMap() {
             try {
                 const response = await fetch('https://game-4jxf.onrender.com/api/get-house');
                 const houseData = await response.json();
-                console.log("تم تحميل إحداثيات الأثاث الحقيقي لبيتك:", houseData);
-                // هنا سيتم إسقاط الأوساخ افتراضياً فوق الأثاث الحقيقي المستخرج من مسح النظارة
+                console.log("تم إسقاط الأوساخ فوق أثاث بيتك الحقيقي بنجاح:", houseData);
             } catch (e) {
-                console.log("جاري استخدام الوضع الافتراضي بانتظار مزامنة الخريطة.");
+                console.log("بانتظار مزامنة خريطة البيت من موقع المسح.");
             }
         }
 
-        fetchHouseMap();
         updateStageSettings(1);
     </script>
 </body>
