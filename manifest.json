@@ -1,0 +1,15 @@
+{
+  "name": "منظف الواقع المختلط",
+  "short_name": "AR Cleaner",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#070913",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
